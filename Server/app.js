@@ -44,7 +44,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    
+
     next();
 })
 
@@ -64,7 +64,8 @@ app.use((error, req, res, next) => {
     })
 })
 
-mongoose.connect('mongodb+srv://userName:password@cluster0-ixl3c.mongodb.net/blog')
+
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-ixl3c.mongodb.net/${process.env.MONDO_DB}?retryWrites=true&w=majority`)
     .then(connected => {
         console.log('connected to DB.')
         app.listen(3000);
