@@ -23,7 +23,7 @@ export const authReducer = (state = initialState, action) => {
 
             return {
                 ...state,
-                loading: false,
+                // loading: false,
                 testRes: action.payload
             }
           
@@ -31,7 +31,8 @@ export const authReducer = (state = initialState, action) => {
             console.log('inside LOGIN_ERROR', action);
             return {
                 ...state,
-                error: action.error,
+                loading: false,
+                error: action.payload,
             }
         default:
             return state;
