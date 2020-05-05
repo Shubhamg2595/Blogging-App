@@ -1,6 +1,5 @@
 import { Constants } from '../Constants/constants';
 
-
 export const initialState = {
     loading: false,
     loginData: null,
@@ -12,7 +11,6 @@ export const authReducer = (state = initialState, action) => {
     switch (action.type) {
 
         case Constants.LOGIN:
-            debugger
             console.log('login action');
 
             return {
@@ -25,7 +23,7 @@ export const authReducer = (state = initialState, action) => {
 
             return {
                 ...state,
-                // loading: false,
+                loading: false,
                 testRes: action.payload
             }
           
@@ -39,5 +37,4 @@ export const authReducer = (state = initialState, action) => {
             return state;
 
     }
-    return state
 } 
