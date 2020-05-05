@@ -68,12 +68,10 @@ class Login extends Component {
 
   handleClickOnLogin(event, payload) {
     event.preventDefault();
-    console.log('handleLogin button clicked')
     this.props.handleLogin(payload);
   }
 
   render() {
-    console.log('2595 login props', this.props)
 
     return (
       <Auth>

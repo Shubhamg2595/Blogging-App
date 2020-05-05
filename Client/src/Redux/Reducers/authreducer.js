@@ -5,6 +5,8 @@ export const initialState = {
     loginData: null,
     error: null,
     testRes: null,
+    userId: null,
+    isAuth: false,
 }
 
 export const authReducer = (state = initialState, action) => {
@@ -23,8 +25,9 @@ export const authReducer = (state = initialState, action) => {
 
             return {
                 ...state,
-                // loading: false,
-                testRes: action.payload
+                loading: false,
+                isAuth: true,
+                userId: action.payload.userId
             }
           
         case Constants.LOGIN_ERROR:
