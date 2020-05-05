@@ -9,9 +9,13 @@ import MobileNavigation from './components/Navigation/MobileNavigation/MobileNav
 import ErrorHandler from './components/ErrorHandler/ErrorHandler';
 import FeedPage from './pages/Feed/Feed';
 import SinglePostPage from './pages/Feed/SinglePost/SinglePost';
-import LoginPage from './pages/Auth/Login';
-import SignupPage from './pages/Auth/Signup';
+import LoginPage from './containers/Authenticate/Login';
+import SignupPage from './containers/Authenticate/Signup';
 import './App.css';
+import { Provider } from 'react-redux';
+import configureStore from './Redux/store';
+
+const store = configureStore();
 
 class App extends Component {
   state = {
@@ -59,9 +63,9 @@ class App extends Component {
   loginHandler = (event, authData) => {
     event.preventDefault();
     this.setState({ authLoading: true });
-    fetch('http://localhost:3000/auth/login',{
+    fetch('http://localhost:3000/auth/login', {
       method: 'POST',
-      headers : {
+      headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -69,16 +73,16 @@ class App extends Component {
         password: authData.password,
       })
     }
-  ).then(res => {
-        if (res.status === 422) {
-          throw new Error('Validation failed.');
-        }
-        if (res.status !== 200 && res.status !== 201) {
-          console.log('Error!');
-          throw new Error('Could not authenticate you!');
-        }
-        return res.json();
-      })
+    ).then(res => {
+      if (res.status === 422) {
+        throw new Error('Validation failed.');
+      }
+      if (res.status !== 200 && res.status !== 201) {
+        console.log('Error!');
+        throw new Error('Could not authenticate you!');
+      }
+      return res.json();
+    })
       .then(resData => {
         console.log(resData);
         this.setState({
@@ -109,9 +113,9 @@ class App extends Component {
   signupHandler = (event, authData) => {
     event.preventDefault();
     this.setState({ authLoading: true });
-    fetch('http://localhost:3000/auth/signup',{
+    fetch('http://localhost:3000/auth/signup', {
       method: 'POST',
-      headers : {
+      headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -210,33 +214,35 @@ class App extends Component {
       );
     }
     return (
-      <Fragment>
-        {this.state.showBackdrop && (
-          <Backdrop onClick={this.backdropClickHandler} />
-        )}
-        <ErrorHandler error={this.state.error} onHandle={this.errorHandler} />
-        <Layout
-          header={
-            <Toolbar>
-              <MainNavigation
-                onOpenMobileNav={this.mobileNavHandler.bind(this, true)}
+      <Provider store={store}>
+        <Fragment>
+          {this.state.showBackdrop && (
+            <Backdrop onClick={this.backdropClickHandler} />
+          )}
+          <ErrorHandler error={this.state.error} onHandle={this.errorHandler} />
+          <Layout
+            header={
+              <Toolbar>
+                <MainNavigation
+                  onOpenMobileNav={this.mobileNavHandler.bind(this, true)}
+                  onLogout={this.logoutHandler}
+                  isAuth={this.state.isAuth}
+                />
+              </Toolbar>
+            }
+            mobileNav={
+              <MobileNavigation
+                open={this.state.showMobileNav}
+                mobile
+                onChooseItem={this.mobileNavHandler.bind(this, false)}
                 onLogout={this.logoutHandler}
                 isAuth={this.state.isAuth}
               />
-            </Toolbar>
-          }
-          mobileNav={
-            <MobileNavigation
-              open={this.state.showMobileNav}
-              mobile
-              onChooseItem={this.mobileNavHandler.bind(this, false)}
-              onLogout={this.logoutHandler}
-              isAuth={this.state.isAuth}
-            />
-          }
-        />
-        {routes}
-      </Fragment>
+            }
+          />
+          {routes}
+        </Fragment>
+      </Provider>
     );
   }
 }
