@@ -23,3 +23,23 @@ export const loginError = (error) => (
         payload: error
     }
 );
+
+export const fetchStatus = () => (
+    {
+        type: Constants.FETCH_STATUS,
+    }
+);
+
+export const fetchStatusSuccess = (successres) => (
+    {
+        type: Constants.FETCH_STATUS_SUCCESS,
+        payload: successres
+    }
+);
+
+export const fetchStatusError = (error) => (
+    {
+        type: Constants.FETCH_STATUS_ERROR,
+        payload: error,
+    }
+);

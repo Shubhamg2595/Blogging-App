@@ -1,4 +1,5 @@
 export const Constants = {
+    //  Auth
     LOGIN: 'LOGIN',
     LOGIN_SUCCESS: 'LOGIN_SUCCESS',
     LOGIN_ERROR: 'LOGIN_ERROR',
@@ -6,4 +7,10 @@ export const Constants = {
     SIGNUP_SUCCESS: 'SIGNUP_SUCCESS',
     SIGNUP_ERROR: 'SIGNUP_ERROR',
     LOADING: 'LOADING',
+    // FeedPage
+    FETCH_STATUS: 'FETCH_STATUS',
+    FETCH_STATUS_SUCCESS: 'FETCH_STATUS_SUCCESS',
+    FETCH_STATUS_ERROR: 'FETCH_STATUS_ERROR',
+    FETCH_POSTS: 'FETCH_POSTS',
+
 }

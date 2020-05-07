@@ -7,7 +7,8 @@ import Toolbar from '../../components/Toolbar/Toolbar';
 import MainNavigation from '../../components/Navigation/MainNavigation/MainNavigation';
 import MobileNavigation from '../../components/Navigation/MobileNavigation/MobileNavigation';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
-import FeedPage from '../../pages/Feed/Feed';
+import FeedPage from '../../containers/FeedPage/FeedPage';
+
 import SinglePostPage from '../../pages/Feed/SinglePost/SinglePost';
 import LoginPage from '../../containers/Authenticate/Login';
 import SignupPage from '../../containers/Authenticate/Signup';
