@@ -41,7 +41,7 @@ exports.getPostById = (req, res, next) => {
     Post.findById(postId)
         .then(post => {
             if (!post) {
-                const error = new error('Sorry. This post no longer exists.')
+                const error = new Error('Sorry. This post no longer exists.')
                 error.statusCode = 422;
                 throw error;
             }
@@ -133,7 +133,7 @@ exports.updatePostById = (req, res, next) => {
     Post.findById(postId)
         .then(post => {
             if (!post) {
-                const error = new error('Sorry. This post no longer exists.')
+                const error = new Error('Sorry. This post no longer exists.')
                 error.statusCode = 422;
                 throw error;
             }
@@ -174,7 +174,7 @@ exports.deletePostById = (req, res, next) => {
     Post.findById(postId)
         .then(post => {
             if (!post) {
-                const error = new error('Sorry. This post no longer exists.')
+                const error = new Error('Sorry. This post no longer exists.')
                 error.statusCode = 422;
                 throw error;
             }

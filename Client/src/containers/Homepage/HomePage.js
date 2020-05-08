@@ -164,7 +164,7 @@ class HomePage extends Component {
 
     render() {
 
-        console.log('2595 homepage',this.props);
+        // console.log('2595 homepage',this.props);
         let routes = (
             <Switch>
                 <Route
