@@ -6,7 +6,12 @@ export const initialState = {
     posts: [],
     totalPosts: 0,
     error: null,
+    currentPost: null,
 }
+
+let newPost;
+let updatedPosts;
+
 
 export const feedReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -65,8 +70,8 @@ export const feedReducer = (state = initialState, action) => {
             }
         case Constants.ADD_NEW_POST_SUCCESS:
             console.log('ADD_NEW_POST_SUCCESS REDUCER');
-            let newPost = action.payload.post;
-            let updatedPosts = [newPost, ...state.posts];
+            newPost = action.payload.post;
+            updatedPosts = [newPost, ...state.posts];
             updatedPosts = postReducer(updatedPosts);
 
             return {
@@ -77,6 +82,29 @@ export const feedReducer = (state = initialState, action) => {
             }
         case Constants.ADD_NEW_POST_ERROR:
             console.log('ADD_NEW_POST_ERROR REDUCER');
+            return {
+                ...state,
+                error: action.payload.error
+            }
+
+
+        case Constants.FETCH_SINGLE_POST:
+            console.log('FETCH_SINGLE_POST REDUCER');
+            return {
+                ...state,
+                loading: true,
+            }
+        case Constants.FETCH_SINGLE_POST_SUCCESS:
+            console.log('FETCH_SINGLE_POST_SUCCESS REDUCER');
+            
+
+            return {
+                ...state,
+                currentPost: action.payload.post,
+                loading: false,
+            }
+        case Constants.FETCH_SINGLE_POST_ERROR:
+            console.log('FETCH_SINGLE_POST_ERROR REDUCER');
             return {
                 ...state,
                 error: action.payload.error

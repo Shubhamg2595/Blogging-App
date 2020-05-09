@@ -1,5 +1,5 @@
 import { put } from 'redux-saga/effects'
-import { fetchStatusSuccess, fetchStatusError, fetchPostsError, fetchPostsSuccess, addPostSuccess, addPostError } from '../Actions/actions';
+import { fetchStatusSuccess, fetchStatusError, fetchPostsError, fetchPostsSuccess, addPostSuccess, addPostError, fetchPostByIdSuccess, fetchPostByIdError } from '../Actions/actions';
 import axios from '../../util/axios'
 
 export function* fetchUserStatusSaga(action) {
@@ -87,6 +87,36 @@ export function* addNewPostSaga(action) {
             console.error('Error status', err.response.status);
             if (err.response.data && err.response.data.message) {
                 yield put(addPostError(err.response.data))
+            }
+        }
+    }
+}
+
+
+export function* fetchPostByIdSaga(action) {
+    console.log('fetchPostByIdSaga initiated', action);
+    const postId = action.payload;
+    try {
+        const token = localStorage.getItem('token');
+        const fetchPostResponse = yield axios.get(`feed/posts/${postId}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+        if (fetchPostResponse.status === 200) {
+            yield put(fetchPostByIdSuccess(fetchPostResponse.data))
+        }
+    }
+    catch (err) {
+        if (err.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Error Data', err.response.data);
+            console.error('Error status', err.response.status);
+            if (err.response.data && err.response.data.message) {
+                yield put(fetchPostByIdError(err.response.data))
             }
         }
     }

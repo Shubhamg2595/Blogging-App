@@ -5,6 +5,8 @@ import './Button.css';
 
 const button = props =>
   !props.link ? (
+    <>
+    {console.log('BUTTON PROPS without Link',props)}
     <button
       className={[
         'button',
@@ -17,7 +19,10 @@ const button = props =>
     >
       {props.loading ? 'Loading...' : props.children}
     </button>
+    </>
   ) : (
+    <>
+    {console.log('BUTTON PROPS with link',props)}
     <Link
       className={[
         'button',
@@ -28,6 +33,7 @@ const button = props =>
     >
       {props.children}
     </Link>
+    </>
   );
 
 export default button;

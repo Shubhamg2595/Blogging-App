@@ -45,7 +45,7 @@ export const fetchStatusError = (error) => (
 );
 
 export const fetchPosts = (pageNum) => (
-     {
+    {
         type: Constants.FETCH_POSTS,
         pageNum
     }
@@ -68,7 +68,7 @@ export const fetchPostsError = (error) => (
 
 
 export const addPost = (payload) => (
-     {
+    {
         type: Constants.ADD_NEW_POST,
         payload
     }
@@ -84,6 +84,29 @@ export const addPostSuccess = (successres) => (
 export const addPostError = (error) => (
     {
         type: Constants.ADD_NEW_POST_ERROR,
+        payload: error,
+    }
+);
+
+
+
+export const fetchPostById = (postId) => (
+    {
+        type: Constants.FETCH_SINGLE_POST,
+        payload: postId,
+    }
+);
+
+export const fetchPostByIdSuccess = (successres) => (
+    {
+        type: Constants.FETCH_SINGLE_POST_SUCCESS,
+        payload: successres
+    }
+);
+
+export const fetchPostByIdError = (error) => (
+    {
+        type: Constants.FETCH_SINGLE_POST_ERROR,
         payload: error,
     }
 );

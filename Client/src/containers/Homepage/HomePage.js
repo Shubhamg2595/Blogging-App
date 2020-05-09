@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
-
 import Layout from '../../components/Layout/Layout';
 import Backdrop from '../../components/Backdrop/Backdrop';
 import Toolbar from '../../components/Toolbar/Toolbar';
@@ -13,21 +12,21 @@ import SinglePostPage from '../../pages/Feed/SinglePost/SinglePost';
 import LoginPage from '../../containers/Authenticate/Login';
 import SignupPage from '../../containers/Authenticate/Signup';
 import { connect } from 'react-redux';
-import configureStore from '../../Redux/store';
+import { fetchPostById } from '../../Redux/Actions/actions'
 
-
-const store = configureStore();
 
 class HomePage extends Component {
     state = {
         showBackdrop: false,
         showMobileNav: false,
-        isAuth: false,
-        token: null,
-        userId: null,
+        // isAuth: false,
+        // token: null,
+        // userId: null,
         authLoading: false,
         error: null
     };
+
+
 
     componentDidMount() {
         const token = localStorage.getItem('token');
@@ -162,9 +161,12 @@ class HomePage extends Component {
         this.setState({ error: null });
     };
 
+
     render() {
 
-        // console.log('2595 homepage',this.props);
+        const token = localStorage.getItem('token');
+
+        console.log('2595 homepage', this.props);
         let routes = (
             <Switch>
                 <Route
@@ -199,7 +201,7 @@ class HomePage extends Component {
                         path="/"
                         exact
                         render={props => (
-                            <FeedPage userId={this.state.userId} token={this.state.token} />
+                            <FeedPage userId={this.props.userId} token={token} />
                         )}
                     />
                     <Route
@@ -207,8 +209,10 @@ class HomePage extends Component {
                         render={props => (
                             <SinglePostPage
                                 {...props}
-                                userId={this.state.userId}
-                                token={this.state.token}
+                                userId={this.props.userId}
+                                token={token}
+                                getPostById={this.props.getPostById}
+                                currentPost={this.props.currentPost}
                             />
                         )}
                     />
@@ -248,14 +252,22 @@ class HomePage extends Component {
     }
 }
 
-const withRouterHome = withRouter(HomePage);
+// const withRouterHome = withRouter(HomePage);
 
-function mapStateToProps({auth}) {
+function mapStateToProps({ auth,feed }) {
     return {
         isloading: auth.loading,
         isAuth: auth.isAuth,
+        userId: auth.userId,
+        currentPost: feed.currentPost,
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        getPostById: (postId) => dispatch(fetchPostById(postId))
     }
 }
 
 
-export default connect(mapStateToProps, null)(withRouterHome);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomePage));
