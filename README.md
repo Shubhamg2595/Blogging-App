@@ -14,7 +14,7 @@ Major Components are related to signup, login , SinglePost, Feeds , EditPost, Er
 Current status : Plain reactJS app with no support for storage management, Error Boundaries, Division of functional and UI components, Interceptors, axios, Middleware for side effects
 
 =====
-PLAN for phase2
+PLAN for phase1
 =====
 1. Code Refactor for sepaaration of UI components and functional Components
 2. Use axios library for ajax requests and interceptor implementations (might be moved to phase2)
@@ -38,7 +38,7 @@ API Integration using REST.
 Current status : NodeJS BackEnd with tightly integrated expressJS framework and NoSQL database i.e MongoDB with API integration using REST.
 
 =====
-PLAN for phase2
+PLAN for phase1
 =====
 1. Code Refactor for handling asynchronous operations by replacing Promises with async/await.
 2. SocketIo integration 
