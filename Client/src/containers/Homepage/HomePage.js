@@ -103,7 +103,7 @@ class HomePage extends Component {
             .catch(err => {
                 console.log(err);
                 this.setState({
-                    isAuth: false,
+                    isAuth: false, 
                     authLoading: false,
                     error: err
                 });

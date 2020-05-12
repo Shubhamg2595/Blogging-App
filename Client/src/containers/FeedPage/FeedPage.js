@@ -9,7 +9,7 @@ import Loader from '../../components/Loader/Loader';
 import ErrorHandler from '../../components/ErrorHandler/ErrorHandler';
 import './FeedPage.css';
 import { connect } from 'react-redux'
-import { fetchStatus, fetchPosts, addPost } from '../../Redux/Actions/actions';
+import { fetchStatus, fetchPosts, addPost, updatePost, deletePostById } from '../../Redux/Actions/actions';
 
 function Feed(props) {
     // state = {
@@ -30,9 +30,11 @@ function Feed(props) {
         posts,
         loading,
         totalPosts,
-        addNewPost } = props;
+        addNewPost,
+        handleUpdatePost,
+        deletePost } = props;
 
-        console.log('2595 feedpage props',props);
+    console.log('2595 feedpage props', props);
 
     const token = localStorage.getItem('token')
 
@@ -55,7 +57,7 @@ function Feed(props) {
         loadPosts();
     }, [])
 
- 
+
 
     // componentDidMount() {
     //   console.log('in Component did mount')
@@ -206,7 +208,18 @@ function Feed(props) {
 
         console.log(formData.get('title'))
         console.log(formData.get('image'))
-        addNewPost(formData);
+
+
+        if (editPost) {
+            handleUpdatePost({ post: formData, postId: editPost._id })
+        }
+        else {
+            addNewPost(formData);
+
+        }
+
+
+
 
         setIsEditing(false);
         // let url = 'http://localhost:3000/feed/post';
@@ -263,23 +276,23 @@ function Feed(props) {
         //         setEditPost(null);
         //         // setEditLoading(false);
 
-                // this.setState(prevState => {
-                //   let updatedPosts = [...prevState.posts];
-                //   if (prevState.editPost) {
-                //     const postIndex = prevState.posts.findIndex(
-                //       p => p._id === prevState.editPost._id
-                //     );
-                //     updatedPosts[postIndex] = post;
-                //   } else if (prevState.posts.length < 2) {
-                //     updatedPosts = prevState.posts.concat(post);
-                //   }
-                //   return {
-                //     posts: updatedPosts,
-                //     isEditing: false,
-                //     editPost: null,
-                //     editLoading: false
-                //   };
-                // });
+        // this.setState(prevState => {
+        //   let updatedPosts = [...prevState.posts];
+        //   if (prevState.editPost) {
+        //     const postIndex = prevState.posts.findIndex(
+        //       p => p._id === prevState.editPost._id
+        //     );
+        //     updatedPosts[postIndex] = post;
+        //   } else if (prevState.posts.length < 2) {
+        //     updatedPosts = prevState.posts.concat(post);
+        //   }
+        //   return {
+        //     posts: updatedPosts,
+        //     isEditing: false,
+        //     editPost: null,
+        //     editLoading: false
+        //   };
+        // });
         //     })
         //     .catch(err => {
         //         console.log(err);
@@ -305,37 +318,7 @@ function Feed(props) {
     };
 
     const deletePostHandler = postId => {
-        // setloading(true);
-        // this.setState({ loading: true });
-        fetch(`http://localhost:3000/feed/posts/${postId}`, {
-            method: 'DELETE',
-            headers: {
-                Authorization: 'Bearer ' + token,
-            }
-        })
-            .then(res => {
-                if (res.status !== 200 && res.status !== 201) {
-                    throw new Error('Deleting a post failed!');
-                }
-                return res.json();
-            })
-            .then(resData => {
-                console.log(resData);
-
-                // const updatedPosts = posts.filter(p => p._id !== postId);
-                // setPosts(updatedPosts)
-                // setloading(false);
-
-                // this.setState(prevState => {
-                //   const updatedPosts = prevState.posts.filter(p => p._id !== postId);
-                //   return { posts: updatedPosts, loading: false };
-                // });
-            })
-            .catch(err => {
-                console.log(err);
-                // setloading(false);
-                // this.setState({ loading: false });
-            });
+        deletePost(postId);
     };
 
     const errorHandler = () => {
@@ -419,7 +402,7 @@ function mapStateToProps(state) {
     return {
         userId: state.auth.userId,
         status: state.feed.status,
-        posts: state.feed.posts,
+        posts: Object.values(state.feed.posts),
         loading: state.feed.loading,
         totalPosts: state.feed.totalPosts
     }
@@ -430,6 +413,8 @@ function mapDispatchToProps(dispatch) {
         fetchUserStatus: () => dispatch(fetchStatus()),
         fetchAllPosts: (pageNum) => dispatch(fetchPosts(pageNum)),
         addNewPost: (post) => dispatch(addPost(post)),
+        handleUpdatePost: (post) => dispatch(updatePost(post)),
+        deletePost: (postId) => dispatch(deletePostById(postId)),
     }
 }
 

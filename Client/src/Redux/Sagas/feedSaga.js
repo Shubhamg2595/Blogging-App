@@ -1,5 +1,5 @@
 import { put } from 'redux-saga/effects'
-import { fetchStatusSuccess, fetchStatusError, fetchPostsError, fetchPostsSuccess, addPostSuccess, addPostError, fetchPostByIdSuccess, fetchPostByIdError } from '../Actions/actions';
+import { fetchStatusSuccess, fetchStatusError, fetchPostsError, fetchPostsSuccess, addPostSuccess, addPostError, fetchPostByIdSuccess, fetchPostByIdError, updatePostSuccess, updatePostError, deletePostByIdSuccess, deletePostByIdError } from '../Actions/actions';
 import axios from '../../util/axios'
 
 export function* fetchUserStatusSaga(action) {
@@ -117,6 +117,66 @@ export function* fetchPostByIdSaga(action) {
             console.error('Error status', err.response.status);
             if (err.response.data && err.response.data.message) {
                 yield put(fetchPostByIdError(err.response.data))
+            }
+        }
+    }
+}
+
+
+export function* updatePostByIdSaga(action) {
+    console.log('updatePostByIdSaga initiated', action);
+    
+    try {
+        const token = localStorage.getItem('token');
+        const fetchPostResponse = yield axios.put(`feed/posts/${action.payload.postId}`,
+            action.payload.post,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+        if (fetchPostResponse.status === 200) {
+            yield put(updatePostSuccess(fetchPostResponse.data))
+        }
+    }
+    catch (err) {
+        if (err.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Error Data', err.response.data);
+            console.error('Error status', err.response.status);
+            if (err.response.data && err.response.data.message) {
+                yield put(updatePostError(err.response.data))
+            }
+        }
+    }
+}
+
+export function* deletePostByIdSaga(action) {
+    console.log('deletePostByIdSaga initiated', action);
+    debugger
+    try {
+        const token = localStorage.getItem('token');
+        const fetchPostResponse = yield axios.delete(`feed/posts/${action.payload}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        );
+        if (fetchPostResponse.status === 200) {
+            yield put(deletePostByIdSuccess(action.payload))
+        }
+    }
+    catch (err) {
+        if (err.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.error('Error Data', err.response.data);
+            console.error('Error status', err.response.status);
+            if (err.response.data && err.response.data.message) {
+                yield put(deletePostByIdError(err.response.data))
             }
         }
     }

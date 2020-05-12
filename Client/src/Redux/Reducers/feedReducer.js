@@ -50,7 +50,7 @@ export const feedReducer = (state = initialState, action) => {
             return {
                 ...state,
                 // posts: [...state.posts, ...modifiedPosts],
-                posts: [...modifiedPosts],
+                posts: modifiedPosts,
                 totalPosts: action.payload.totalItems,
                 loading: false,
             }
@@ -96,7 +96,7 @@ export const feedReducer = (state = initialState, action) => {
             }
         case Constants.FETCH_SINGLE_POST_SUCCESS:
             console.log('FETCH_SINGLE_POST_SUCCESS REDUCER');
-            
+
 
             return {
                 ...state,
@@ -105,6 +105,53 @@ export const feedReducer = (state = initialState, action) => {
             }
         case Constants.FETCH_SINGLE_POST_ERROR:
             console.log('FETCH_SINGLE_POST_ERROR REDUCER');
+            return {
+                ...state,
+                error: action.payload.error
+            }
+
+        case Constants.EDIT_POST:
+            console.log('EDIT_POST REDUCER');
+            return {
+                ...state,
+                loading: true,
+            }
+        case Constants.EDIT_POST_SUCCESS:
+            console.log('EDIT_POST_SUCCESS REDUCER');
+
+            debugger
+            return {
+                ...state,
+                posts: {
+                    ...state.posts,
+                    [action.payload.post._id]: action.payload.post
+                },
+                loading: false,
+            }
+        case Constants.EDIT_POST_ERROR:
+            console.log('EDIT_POST_ERROR REDUCER');
+            return {
+                ...state,
+                error: action.payload.error
+            }
+        case Constants.DELETE_POST:
+            console.log('DELETE_POST REDUCER');
+            return {
+                ...state,
+                loading: true,
+            }
+        case Constants.DELETE_POST_SUCCESS:
+            console.log('DELETE_POST_SUCCESS REDUCER');
+
+            debugger
+
+            delete state.posts[action.payload];
+            return {
+                ...state,
+                loading: false,
+            }
+        case Constants.DELETE_POST_ERROR:
+            console.log('DELETE_POST_ERROR REDUCER');
             return {
                 ...state,
                 error: action.payload.error
@@ -120,7 +167,7 @@ export const feedReducer = (state = initialState, action) => {
 
 function postReducer(posts) {
     try {
-        let reducedPosts = [];
+        let reducedPosts = {};
 
         // key-value pair code
         //     let test = {};
@@ -128,12 +175,12 @@ function postReducer(posts) {
         // console.log(test)
 
         if (posts.length) {
-            reducedPosts = posts.map(post => {
-                return {
+            posts.map((post) =>
+                reducedPosts[post._id] = {
                     ...post,
                     imagePath: post.imageUrl
                 }
-            })
+            )
         }
         return reducedPosts;
     }

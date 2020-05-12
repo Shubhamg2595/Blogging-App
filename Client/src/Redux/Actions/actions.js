@@ -112,3 +112,47 @@ export const fetchPostByIdError = (error) => (
 );
 
 
+export const updatePost = (post) => (
+    {
+        type: Constants.EDIT_POST,
+        payload: post,
+    }
+);
+
+export const updatePostSuccess = (successres) => (
+    {
+        type: Constants.EDIT_POST_SUCCESS,
+        payload: successres
+    }
+);
+
+export const updatePostError = (error) => (
+    {
+        type: Constants.EDIT_POST_ERROR,
+        payload: error,
+    }
+);
+
+
+export const deletePostById = (postId) => (
+    {
+        type: Constants.DELETE_POST,
+        payload: postId,
+    }
+);
+
+export const deletePostByIdSuccess = (successres) => (
+    {
+        type: Constants.DELETE_POST_SUCCESS,
+        payload: successres
+    }
+);
+
+export const deletePostByIdError = (error) => (
+    {
+        type: Constants.DELETE_POST_ERROR,
+        payload: error,
+    }
+);
+
+
