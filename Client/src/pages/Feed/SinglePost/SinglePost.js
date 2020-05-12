@@ -1,58 +1,45 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Image from '../../../components/Image/Image';
 import './SinglePost.css';
 
-class SinglePost extends Component {
-  state = {
-    title: '',
-    author: '',
-    date: '',
-    image: '',
-    content: ''
-  };
+function SinglePost(props) {
 
-  componentDidMount() {
-    const postId = this.props.match.params.postId;
-    fetch(`http://localhost:3000/feed/posts/${postId}`,{
-      headers: {
-          Authorization: 'Bearer '+ this.props.token,
-        }
-    })
-      .then(res => {
-        if (res.status !== 200) {
-          throw new Error('Failed to fetch status');
-        }
-        return res.json();
-      })
-      .then(resData => {
-        this.setState({
-          title: resData.post.title,
-          author: resData.post.creator.name,
-          image:`http://localhost:3000/${resData.post.imageUrl}`,
-          date: new Date(resData.post.createdAt).toLocaleDateString('en-US'),
-          content: resData.post.content
-        });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
+  const [image, setImage] = useState('')
 
-  render() {
-    return (
-      <section className="single-post">
-        <h1>{this.state.title}</h1>
-        <h2>
-          Created by {this.state.author} on {this.state.date}
-        </h2>
-        <div className="single-post__image">
-          <Image contain imageUrl={this.state.image} />
-        </div>
-        <p>{this.state.content}</p>
-      </section>
-    );
-  }
+  const { getPostById, currentPost } = props;
+
+  useEffect(() => {
+    const postId = props.match.params.postId;
+    getPostById(postId);
+  }, [])
+
+  // find a optimized way
+  useEffect(() => {
+    if (currentPost) {
+      setImage(`http://localhost:3000/${currentPost.imageUrl}`)
+    }
+  }, [currentPost])
+
+  console.log('SinglePost props', props);
+
+  return (
+    <>
+      {
+        currentPost ? <section className="single-post">
+          <h1>{currentPost.title}</h1>
+          <h2>
+            Created by {currentPost.author} on {new Date(currentPost.createdAt).toLocaleDateString('en-US')}
+          </h2>
+          <div className="single-post__image">
+            <Image contain imageUrl={image} />
+          </div>
+          <p>{currentPost.content}</p>
+        </section> : null
+      }
+
+    </>
+  );
 }
 
 export default SinglePost;

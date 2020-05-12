@@ -57,7 +57,7 @@ exports.login = (req, res, next) => {
             return bcrypt.compare(password, user.password)
         }).then(doMatch => {
             if (!doMatch) {
-                const error = new error('Password not matched');
+                const error = new Error('Password not matched');
                 error.statusCode = 422;
                 throw error;
             }
