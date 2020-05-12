@@ -16,8 +16,13 @@ Current status : Plain reactJS app with no support for storage management, Error
 =====
 PLAN for phase1
 =====
-1. Code Refactor for sepaaration of UI components and functional Components
-2. Use axios library for ajax requests and interceptor implementations (might be moved to phase2)
+1. Code Refactor for separation of UI components and functional Components
+2. Create Reusable Functional components with Hooks
+3. Use Redux for store Management
+4. Use Redux-Saga for handling side Effects
+5. Use axios library for ajax requests
+
+Note: interceptor implementation for network request (might be moved to phase2)
 
 
 -----------
@@ -40,5 +45,6 @@ Current status : NodeJS BackEnd with tightly integrated expressJS framework and 
 =====
 PLAN for phase1
 =====
-1. Code Refactor for handling asynchronous operations by replacing Promises with async/await.
-2. SocketIo integration 
+1. Code Refactor for handling asynchronous operations by replacing Promises with async/await.(whereEver possible)
+2. SocketIo integration for Real Time Post Addition.
+3. Replace REST with GraphQL.
