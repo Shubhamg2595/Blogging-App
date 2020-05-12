@@ -171,8 +171,7 @@ export function* deletePostByIdSaga(action) {
     }
     catch (err) {
         if (err.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
+            
             console.error('Error Data', err.response.data);
             console.error('Error status', err.response.status);
             if (err.response.data && err.response.data.message) {

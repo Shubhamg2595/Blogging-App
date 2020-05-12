@@ -12,16 +12,7 @@ import { connect } from 'react-redux'
 import { fetchStatus, fetchPosts, addPost, updatePost, deletePostById } from '../../Redux/Actions/actions';
 
 function Feed(props) {
-    // state = {
-    //   isEditing: false,
-    //   posts: [],
-    //   totalPosts: 0,
-    //   editPost: null,
-    //   status: '',
-    //   postPage: 1,
-    //   postsLoading: true,
-    //   editLoading: false
-    // };
+
 
     const {
         fetchUserStatus,
@@ -39,13 +30,8 @@ function Feed(props) {
     const token = localStorage.getItem('token')
 
     const [isEditing, setIsEditing] = useState(false);
-    // const [posts, setPosts] = useState([]);
-    // const [totalPosts, setTotalPosts] = useState(0);
     const [editPost, setEditPost] = useState(null);
-    // const [status, setStatus] = useState(status);
     const [postPage, setPostPage] = useState(1);
-    // const [loading, setloading] = useState(true);
-    // const [editLoading, setEditLoading] = useState(false);
     const [error, setError] = useState(null);
 
 
@@ -59,87 +45,23 @@ function Feed(props) {
 
 
 
-    // componentDidMount() {
-    //   console.log('in Component did mount')
-    //   fetch('http://localhost:3000/feed/status', {
-    //     headers: {
-    //       Authorization: `Bearer ${token}`
-    //     }
-    //   })
-    //     .then(res => {
-    //       if (res.status !== 200) {
-    //         throw new Error('Failed to fetch user status.');
-    //       }
-    //       return res.json();
-    //     })
-    //     .then(resData => {
-    //       setStatus(resData.status)
-    //       // this.setState({ status: resData.status });
-    //     })
-    //     .catch(err => {
-    //       catchError(err);
-    //     });
-
-    //   loadPosts();
-    // }
 
     function loadPosts(direction) {
         if (direction) {
-            // setloading(true);
-            // setPosts([]);
-            // this.setState({ loading: true, posts: [] });
+
         }
         let page = postPage;
         if (direction === 'next') {
             page++;
             setPostPage(page)
-            // this.setState({ postPage: page });
         }
         if (direction === 'previous') {
             page--;
             setPostPage(page);
-            // this.setState({ postPage: page });
         }
 
         fetchAllPosts(page);
 
-        // fetch('http://localhost:3000/feed/posts?page=' + page, {
-        //     headers: {
-        //         Authorization: 'Bearer ' + token,
-        //     }
-        // })
-        //     .then(res => {
-        //         if (res.status !== 200) {
-        //             throw new Error('Failed to fetch posts.');
-        //         }
-        //         return res.json();
-        //     })
-        //     .then(resData => {
-
-        //         let fetchedPosts = resData.posts.map(post => {
-        //             return {
-        //                 ...post,
-        //                 imagePath: post.imageUrl,
-        //             }
-        //         });
-        //         setPosts(fetchedPosts);
-        //         setTotalPosts(resData.totalItems);
-        //         setloading(false);
-
-        //         // this.setState({
-        //         //   posts: resData.posts.map(post => {
-        //         //     return {
-        //         //       ...post,
-        //         //       imagePath: post.imageUrl,
-        //         //     }
-        //         //   }),
-        //         //   totalPosts: resData.totalItems,
-        //         //   loading: false
-        //         // });
-        //     })
-        //     .catch(err => {
-        //         catchError(err)
-        //     });
     };
 
     const statusUpdateHandler = event => {
@@ -168,7 +90,6 @@ function Feed(props) {
 
     const newPostHandler = () => {
         setIsEditing(true)
-        // this.setState({ isEditing: true });
     };
 
     const startEditPostHandler = postId => {
@@ -176,31 +97,17 @@ function Feed(props) {
         setIsEditing(true);
         setEditPost(loadedPost);
 
-        // this.setState(prevState => {
-        //   const loadedPost = { ...prevState.posts.find(p => p._id === postId) };
 
-        //   return {
-        //     isEditing: true,
-        //     editPost: loadedPost
-        //   };
-        // });
     };
 
     const cancelEditHandler = () => {
         setIsEditing(false);
         setEditPost(null);
 
-        // this.setState({ isEditing: false, editPost: null });
     };
 
     const finishEditHandler = postData => {
-        // setEditLoading(true);
 
-        // this.setState({
-        //   editLoading: true
-        // });
-
-        // Set up data (with image!)
         const formData = new FormData();
         formData.append('title', postData.title)
         formData.append('content', postData.content)
@@ -222,99 +129,11 @@ function Feed(props) {
 
 
         setIsEditing(false);
-        // let url = 'http://localhost:3000/feed/post';
-        // let method = 'POST';
 
-        // if (editPost) {
-        //     url = `http://localhost:3000/feed/posts/${editPost._id}`;
-        //     method = 'PUT';
-        // }
-
-        // fetch(url, {
-        //     method: method,
-        //     body: formData,
-        //     headers: {
-        //         Authorization: 'Bearer ' + token,
-        //     }
-        //     // headers: {
-        //     //   'Content-Type': 'application/json'
-        //     // },
-        //     // body: JSON.stringify({
-        //     //   title: postData.title,
-        //     //   content: postData.content,
-        //     //   // creator: postData.creator,
-        //     //   // title: postData.title,
-        //     // })
-        // })
-        //     .then(res => {
-        //         if (res.status !== 200 && res.status !== 201) {
-        //             throw new Error('Creating or editing a post failed!');
-        //         }
-        //         return res.json();
-        //     })
-        //     .then(resData => {
-        //         const post = {
-        //             _id: resData.post._id,
-        //             title: resData.post.title,
-        //             content: resData.post.content,
-        //             creator: resData.post.creator,
-        //             createdAt: resData.post.createdAt
-        //         };
-
-        //         let updatedPosts = posts;
-        //         if (editPost) {
-        //             const postIndex = posts.findIndex(
-        //                 p => p._id === editPost._id
-        //             );
-        //             updatedPosts[postIndex] = post;
-        //         }
-        //         else if (posts.length < 2) {
-        //             updatedPosts = posts.concat(post);
-        //         }
-        //         // setPosts(updatedPosts);
-        //         setIsEditing(false);
-        //         setEditPost(null);
-        //         // setEditLoading(false);
-
-        // this.setState(prevState => {
-        //   let updatedPosts = [...prevState.posts];
-        //   if (prevState.editPost) {
-        //     const postIndex = prevState.posts.findIndex(
-        //       p => p._id === prevState.editPost._id
-        //     );
-        //     updatedPosts[postIndex] = post;
-        //   } else if (prevState.posts.length < 2) {
-        //     updatedPosts = prevState.posts.concat(post);
-        //   }
-        //   return {
-        //     posts: updatedPosts,
-        //     isEditing: false,
-        //     editPost: null,
-        //     editLoading: false
-        //   };
-        // });
-        //     })
-        //     .catch(err => {
-        //         console.log(err);
-
-        //         setIsEditing(false);
-        //         setEditPost(null);
-        //         // setEditLoading(false);
-        //         setError(err);
-
-
-        //         // this.setState({
-        //         //     isEditing: false,
-        //         //     editPost: null,
-        //         //     editLoading: false,
-        //         //     error: err
-        //         // });
-        //     });
     };
 
     const statusInputChangeHandler = (input, value) => {
-        // setStatus(value);
-        // this.setState({ status: value });
+
     };
 
     const deletePostHandler = postId => {
@@ -323,12 +142,10 @@ function Feed(props) {
 
     const errorHandler = () => {
         setError(null);
-        // this.setState({ error: null });
     };
 
     const catchError = error => {
         setError(error)
-        // this.setState({ error: error });
     };
 
 
