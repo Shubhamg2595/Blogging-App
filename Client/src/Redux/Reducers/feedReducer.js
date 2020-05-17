@@ -44,14 +44,14 @@ export const feedReducer = (state = initialState, action) => {
             }
         case Constants.FETCH_POSTS_SUCCESS:
             console.log('FETCH_POSTS_SUCCESS REDUCER');
-
+            debugger
             let modifiedPosts = postReducer(action.payload.posts)
 
             return {
                 ...state,
                 // posts: [...state.posts, ...modifiedPosts],
                 posts: modifiedPosts,
-                totalPosts: action.payload.totalItems,
+                totalPosts: action.payload.totalPosts,
                 loading: false,
             }
         case Constants.FETCH_POSTS_ERROR:

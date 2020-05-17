@@ -89,6 +89,7 @@ module.exports = {
 
 
     },
+
     createPost: async function ({ postInput }, req) {
 
         if (!req.isAuth) {
@@ -135,7 +136,7 @@ module.exports = {
 
         let createdPost = await post.save();
 
-         creatorData.posts.push(createdPost);
+        creatorData.posts.push(createdPost);
         await creatorData.save();
 
         return {
@@ -147,5 +148,34 @@ module.exports = {
 
 
 
+    },
+
+    posts: async function (args, req) {
+
+        // if (!req.isAuth) {
+        //     const error = new Error('User Not Authenticated');
+        //     error.code = 401;
+        //     throw error;
+        // }
+
+        // let currentPage = postInput.page || 1;
+        // const perPage = 2;
+
+        const totalPosts = await Post.find().countDocuments();
+        const posts = await Post.find()
+            .sort({ createdAt: -1 })
+            .populate('creator');
+        return {
+            posts: posts.map(post => {
+                return {
+                    ...post._doc,
+                _id: post._id.toString(),
+                createdAt: post.createdAt.toISOString(),
+                updatedAt: post.updatedAt.toISOString(),
+                }
+            }),
+            totalPosts: totalPosts
+        }
     }
+
 }

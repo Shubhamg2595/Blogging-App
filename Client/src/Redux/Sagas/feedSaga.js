@@ -36,9 +36,29 @@ export function* fetchUserStatusSaga(action) {
 export function* fetchAllPostsSaga(action) {
     console.log('fetchAllPostsSaga saga initiated', action);
     try {
-        const page = action.pageNum;
+        // const page = action.pageNum;
         const token = localStorage.getItem('token');
-        const loadPostsResponse = yield axios.get(`feed/posts?page=${page}`,
+
+        const getPostsQuery = {
+            query: `
+                {posts {
+                    posts {
+                    _id
+                    title
+                    content
+                    imageUrl
+                    creator {
+                        name
+                        email
+                    }
+                }
+                    totalPosts
+                }}
+            `
+        }
+
+        const loadPostsResponse = yield axios.post(`graphql`,
+            getPostsQuery,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -46,7 +66,7 @@ export function* fetchAllPostsSaga(action) {
             }
         );
         if (loadPostsResponse.status === 200) {
-            yield put(fetchPostsSuccess(loadPostsResponse.data))
+            yield put(fetchPostsSuccess(loadPostsResponse.data.data.posts))
         }
     }
     catch (err) {
