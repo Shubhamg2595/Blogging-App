@@ -46,12 +46,14 @@ export function* handleLoginSaga(action) {
             {
                 headers: headers
             });
+
         if (loginResponse.status === 200) {
+            const { data } = loginResponse.data;
             yield put(loginSuccess({
-                userId: loginResponse.data.userId
+                userId: data.login.userId
             }))
-            localStorage.setItem('token', loginResponse.data.token)
-            localStorage.setItem('userId', loginResponse.data.userId)
+            localStorage.setItem('token', data.login.token)
+            localStorage.setItem('userId', data.login.userId)
             // const remainingMilliseconds = 60 * 60 * 1000;
             //     const expiryDate = new Date(
             //         new Date().getTime() + remainingMilliseconds
