@@ -121,7 +121,7 @@ function Feed(props) {
             handleUpdatePost({ post: formData, postId: editPost._id })
         }
         else {
-            addNewPost(formData);
+            addNewPost(postData);
 
         }
 
@@ -221,6 +221,7 @@ function mapStateToProps(state) {
         status: state.feed.status,
         posts: Object.values(state.feed.posts),
         loading: state.feed.loading,
+        loading: state.auth.loading,
         totalPosts: state.feed.totalPosts
     }
 }

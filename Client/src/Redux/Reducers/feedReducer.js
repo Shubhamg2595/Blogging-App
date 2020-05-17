@@ -70,7 +70,7 @@ export const feedReducer = (state = initialState, action) => {
             }
         case Constants.ADD_NEW_POST_SUCCESS:
             console.log('ADD_NEW_POST_SUCCESS REDUCER');
-            newPost = action.payload.post;
+            newPost = action.payload.createPost;
             updatedPosts = [newPost, ...state.posts];
             updatedPosts = postReducer(updatedPosts);
 
@@ -119,7 +119,6 @@ export const feedReducer = (state = initialState, action) => {
         case Constants.EDIT_POST_SUCCESS:
             console.log('EDIT_POST_SUCCESS REDUCER');
 
-            debugger
             return {
                 ...state,
                 posts: {
@@ -143,7 +142,6 @@ export const feedReducer = (state = initialState, action) => {
         case Constants.DELETE_POST_SUCCESS:
             console.log('DELETE_POST_SUCCESS REDUCER');
 
-            debugger
 
             delete state.posts[action.payload];
             return {

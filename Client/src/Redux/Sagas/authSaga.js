@@ -6,7 +6,7 @@ export function* handleLoginSaga(action) {
     console.log('Login saga initiated', action);
     try {
         const { email, password } = action.payload;
-
+        const token = localStorage.getItem('token');
         if (email === '' || password === '') {
             const error = new Error();
             if (email === '' && password === '') {
@@ -38,7 +38,8 @@ export function* handleLoginSaga(action) {
 
 
         const headers = {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
         }
 
         const loginResponse = yield axios.post('/graphql',

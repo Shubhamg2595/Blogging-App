@@ -65,18 +65,44 @@ export function* fetchAllPostsSaga(action) {
 export function* addNewPostSaga(action) {
     console.log('addNewPostSaga saga initiated', action);
     try {
+
+        const addPostQuery = {
+            query: `
+            mutation {
+                createPost(
+                   postInput: {
+                    title: "${action.payload.title}",
+                    content: "${action.payload.content}",
+                    imageUrl: "imageUrl",
+                   }
+                )
+                {
+                    _id,
+                    title,
+                    content,
+                    imageUrl,
+                    creator {
+                        name
+                    }
+                    createdAt
+                }
+            }
+            `
+
+        }
+
         const token = localStorage.getItem('token');
-        const addPostResponse = yield axios.post(`feed/post`,
-            action.payload,
+        const addPostResponse = yield axios.post(`/graphql`,
+            JSON.stringify(addPostQuery),
             {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
             }
         );
-        if (addPostResponse.status === 201) {
-            debugger
-            yield put(addPostSuccess(addPostResponse.data))
+        if (addPostResponse.status === 200) {
+            yield put(addPostSuccess(addPostResponse.data.data))
         }
     }
     catch (err) {
@@ -125,7 +151,7 @@ export function* fetchPostByIdSaga(action) {
 
 export function* updatePostByIdSaga(action) {
     console.log('updatePostByIdSaga initiated', action);
-    
+
     try {
         const token = localStorage.getItem('token');
         const fetchPostResponse = yield axios.put(`feed/posts/${action.payload.postId}`,
@@ -155,7 +181,6 @@ export function* updatePostByIdSaga(action) {
 
 export function* deletePostByIdSaga(action) {
     console.log('deletePostByIdSaga initiated', action);
-    debugger
     try {
         const token = localStorage.getItem('token');
         const fetchPostResponse = yield axios.delete(`feed/posts/${action.payload}`,
@@ -171,7 +196,7 @@ export function* deletePostByIdSaga(action) {
     }
     catch (err) {
         if (err.response) {
-            
+
             console.error('Error Data', err.response.data);
             console.error('Error status', err.response.status);
             if (err.response.data && err.response.data.message) {
