@@ -13,6 +13,8 @@ const graphqlResolvers = require('./graphql/resolvers')
 const feedRoutes = require('./routes/feed');
 const authRoutes = require('./routes/auth');
 
+const auth = require('./middleware/auth')
+
 // for multer : file upload
 const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -46,17 +48,25 @@ app.use('/images', express.static(path.join(__dirname, 'images')))
 
 
 
-app.use('/feed', feedRoutes)
-app.use('/auth', authRoutes)
-
-
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
+    if(req.method === 'OPTIONS')
+    {
+        return res.sendStatus(200);
+    }
     next();
 })
+
+
+
+app.use(auth)
+
+// app.use('/feed', feedRoutes)
+// app.use('/auth', authRoutes)
+
 
 
 
@@ -65,7 +75,7 @@ app.use('/graphql', graphqlHttp({
     schema: graphqlSchema,
     rootValue: graphqlResolvers,
     graphiql: true,
-    formatError(err) {
+    customFormatErrorFn(err) {
         if (!err.originalError) {
             return err;
         }
