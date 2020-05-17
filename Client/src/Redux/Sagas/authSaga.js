@@ -22,12 +22,27 @@ export function* handleLoginSaga(action) {
 
         }
 
+        const loginQuery = {
+            query: `
+            query {
+                login(
+                    loginInput: {
+                    email: "${email}",
+                    password: "${password}"
+            }) {
+              userId
+              token
+            }
+          }`
+        }
+
+
         const headers = {
             'Content-Type': 'application/json'
         }
 
-        const loginResponse = yield axios.post('auth/login',
-            action.payload,
+        const loginResponse = yield axios.post('/graphql',
+            loginQuery,
             {
                 headers: headers
             });

@@ -100,7 +100,7 @@ class HomePage extends Component {
             .catch(err => {
                 console.log(err);
                 this.setState({
-                    isAuth: false, 
+                    isAuth: false,
                     authLoading: false,
                     error: err
                 });
@@ -110,30 +110,44 @@ class HomePage extends Component {
     signupHandler = (event, authData) => {
         event.preventDefault();
         this.setState({ authLoading: true });
-        fetch('http://localhost:3000/auth/signup', {
+        const graphqlQuery = {
+            query: `
+            mutation{
+                createUser(
+                    userInput: {
+                        email: "${authData.signupForm.email.value}",
+                        name: "${authData.signupForm.name.value}",
+                        password: "${authData.signupForm.name.value}",
+                    }
+                )
+                {
+                    _id,
+                    name,
+                    email,
+                }
+            }
+            `
+        }
+        fetch('http://localhost:3000/graphql', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                email: authData.signupForm.email.value,
-                password: authData.signupForm.password.value,
-                name: authData.signupForm.name.value,
-            })
+            body: JSON.stringify(graphqlQuery)
         })
             .then(res => {
-                if (res.status === 422) {
+
+                return res.json();
+            })
+            .then(resData => {
+                if (resData.errors && resData.errors[0].status === 422) {
                     throw new Error(
                         "Validation failed. Make sure the email address isn't used yet!"
                     );
                 }
-                if (res.status !== 200 && res.status !== 201) {
-                    console.log('Error!');
-                    throw new Error('Creating a user failed!');
+                if (resData.errors) {
+                    throw new Error('User SignUp Failed!')
                 }
-                return res.json();
-            })
-            .then(resData => {
                 console.log(resData);
                 this.setState({ isAuth: false, authLoading: false });
                 this.props.history.replace('/');
@@ -172,8 +186,6 @@ class HomePage extends Component {
                     render={props => (
                         <LoginPage
                             {...props}
-                            onLogin={this.loginHandler}
-                            loading={this.state.authLoading}
                         />
                     )}
                 />
@@ -251,7 +263,7 @@ class HomePage extends Component {
 
 // const withRouterHome = withRouter(HomePage);
 
-function mapStateToProps({ auth,feed }) {
+function mapStateToProps({ auth, feed }) {
     return {
         isloading: auth.loading,
         isAuth: auth.isAuth,
