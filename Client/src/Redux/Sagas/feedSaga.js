@@ -36,25 +36,26 @@ export function* fetchUserStatusSaga(action) {
 export function* fetchAllPostsSaga(action) {
     console.log('fetchAllPostsSaga saga initiated', action);
     try {
-        // const page = action.pageNum;
+        const page = action.pageNum;
         const token = localStorage.getItem('token');
 
         const getPostsQuery = {
             query: `
-                {posts {
-                    posts {
-                    _id
-                    title
-                    content
-                    imageUrl
-                    creator {
-                        name
-                        email
+                {
+                    posts(page: ${page}) {
+                        posts {
+                        _id
+                        title
+                        content
+                        imageUrl
+                        creator {
+                            name
+                            email
+                        }
+                        createdAt
                     }
-                    createdAt
-                }
-                    totalPosts
-                }}
+                        totalPosts
+                    }}
             `
         }
 
