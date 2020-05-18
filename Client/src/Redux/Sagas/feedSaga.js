@@ -51,6 +51,7 @@ export function* fetchAllPostsSaga(action) {
                         name
                         email
                     }
+                    createdAt
                 }
                     totalPosts
                 }}

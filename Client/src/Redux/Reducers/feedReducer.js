@@ -44,7 +44,6 @@ export const feedReducer = (state = initialState, action) => {
             }
         case Constants.FETCH_POSTS_SUCCESS:
             console.log('FETCH_POSTS_SUCCESS REDUCER');
-            debugger
             let modifiedPosts = postReducer(action.payload.posts)
 
             return {
@@ -70,9 +69,12 @@ export const feedReducer = (state = initialState, action) => {
             }
         case Constants.ADD_NEW_POST_SUCCESS:
             console.log('ADD_NEW_POST_SUCCESS REDUCER');
-            newPost = action.payload.createPost;
-            updatedPosts = [newPost, ...state.posts];
-            updatedPosts = postReducer(updatedPosts);
+            newPost = postReducer([action.payload.createPost]);
+            console.log(newPost)
+            updatedPosts = {...newPost, ...state.posts};
+
+           
+            // updatedPosts = postReducer(updatedPosts);
 
             return {
                 ...state,
