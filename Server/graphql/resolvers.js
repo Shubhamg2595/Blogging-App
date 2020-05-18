@@ -92,11 +92,11 @@ module.exports = {
 
     createPost: async function ({ postInput }, req) {
 
-        if (!req.isAuth) {
-            const error = new Error('User Not Authenticated');
-            error.code = 401;
-            throw error;
-        }
+        // if (!req.isAuth) {
+        //     const error = new Error('User Not Authenticated');
+        //     error.code = 401;
+        //     throw error;
+        // }
 
         let creatorData = await User.findById(req.userId);
         if (!creatorData) {
@@ -111,7 +111,8 @@ module.exports = {
 
         const title = postInput.title;
         const content = postInput.content;
-        const imageUrl = postInput.imageUrl;
+        console.log('imageUrl',postInput.imageUrl)
+        const imageUrl = postInput.imageUrl.replace("//", "/");
 
         if (validator.isEmpty(title) || !validator.isLength(title, { min: 5 })) {
             errors.push({ message: 'title must have more than 5 characters' })

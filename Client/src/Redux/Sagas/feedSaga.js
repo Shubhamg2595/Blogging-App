@@ -88,6 +88,11 @@ export function* addNewPostSaga(action) {
     console.log('addNewPostSaga saga initiated', action);
     try {
 
+
+        // fetching imageUrl by adding image to DB using restApi
+
+        debugger
+
         const addPostQuery = {
             query: `
             mutation {
@@ -95,7 +100,7 @@ export function* addNewPostSaga(action) {
                    postInput: {
                     title: "${action.payload.title}",
                     content: "${action.payload.content}",
-                    imageUrl: "imageUrl",
+                    imageUrl: "${action.payload.imageUrl}",
                    }
                 )
                 {

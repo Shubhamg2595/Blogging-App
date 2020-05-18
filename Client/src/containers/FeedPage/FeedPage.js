@@ -115,13 +115,31 @@ function Feed(props) {
 
         console.log(formData.get('title'))
         console.log(formData.get('image'))
-
+        debugger
 
         if (editPost) {
+            formData.append('oldPath', editPost.imagePath)
             handleUpdatePost({ post: formData, postId: editPost._id })
         }
         else {
-            addNewPost(postData);
+
+            fetch('http://localhost:3000/post-image', {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+                body: formData
+            })
+                .then(res => res.json())
+                .then(fileResponse => {
+                    const imageUrl = fileResponse.filePath.split('\\').join('//');
+                    postData.imageUrl = imageUrl;
+                    addNewPost(postData);
+                })
+                .catch(err => console.log(err))
+
+
+
 
         }
 
