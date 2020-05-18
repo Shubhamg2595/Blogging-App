@@ -115,7 +115,6 @@ function Feed(props) {
 
         console.log(formData.get('title'))
         console.log(formData.get('image'))
-        debugger
 
         if (editPost) {
             formData.append('oldPath', editPost.imagePath)

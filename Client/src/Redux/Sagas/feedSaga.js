@@ -44,18 +44,18 @@ export function* fetchAllPostsSaga(action) {
                 {
                     posts(page: ${page}) {
                         posts {
-                        _id
-                        title
-                        content
-                        imageUrl
-                        creator {
-                            name
-                            email
+                            _id
+                            title
+                            content
+                            imageUrl
+                            creator {
+                                name
+                                email
+                            }
+                            createdAt
                         }
-                        createdAt
-                    }
-                        totalPosts
-                    }}
+                            totalPosts
+                        }}
             `
         }
 
@@ -90,8 +90,6 @@ export function* addNewPostSaga(action) {
 
 
         // fetching imageUrl by adding image to DB using restApi
-
-        debugger
 
         const addPostQuery = {
             query: `
@@ -149,9 +147,28 @@ export function* addNewPostSaga(action) {
 export function* fetchPostByIdSaga(action) {
     console.log('fetchPostByIdSaga initiated', action);
     const postId = action.payload;
+
+    const fetchSinglePostQuery = {
+        query : `
+        {
+            post(id: "${postId}") {
+              title
+              content
+              imageUrl
+              creator {
+                name
+              }
+              createdAt
+            }
+          }
+        `
+    }
+
+
     try {
         const token = localStorage.getItem('token');
-        const fetchPostResponse = yield axios.get(`feed/posts/${postId}`,
+        const fetchPostResponse = yield axios.post(`graphql`,
+            fetchSinglePostQuery,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -159,7 +176,7 @@ export function* fetchPostByIdSaga(action) {
             }
         );
         if (fetchPostResponse.status === 200) {
-            yield put(fetchPostByIdSuccess(fetchPostResponse.data))
+            yield put(fetchPostByIdSuccess(fetchPostResponse.data.data))
         }
     }
     catch (err) {
