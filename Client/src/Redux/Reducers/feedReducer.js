@@ -125,7 +125,7 @@ export const feedReducer = (state = initialState, action) => {
                 ...state,
                 posts: {
                     ...state.posts,
-                    [action.payload.post._id]: action.payload.post
+                    [action.payload._id]: action.payload
                 },
                 loading: false,
             }

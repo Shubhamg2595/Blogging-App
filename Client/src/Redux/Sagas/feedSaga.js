@@ -149,7 +149,7 @@ export function* fetchPostByIdSaga(action) {
     const postId = action.payload;
 
     const fetchSinglePostQuery = {
-        query : `
+        query: `
         {
             post(id: "${postId}") {
               title
@@ -198,16 +198,43 @@ export function* updatePostByIdSaga(action) {
 
     try {
         const token = localStorage.getItem('token');
-        const fetchPostResponse = yield axios.put(`feed/posts/${action.payload.postId}`,
-            action.payload.post,
+        const updatePostQuery = {
+            query: `
+            mutation {
+                updatePost(
+                        id: "${action.payload.postId}",
+                        postInput: {
+                        title: "${action.payload.post.title}",
+                        content: "${action.payload.post.content}",
+                        imageUrl: "${action.payload.post.imageUrl}",
+                   }
+                )
+                {
+                    _id,
+                    title,
+                    content,
+                    imageUrl,
+                    creator {
+                        name
+                    }
+                    createdAt
+                }
+            }
+            `
+
+        }
+
+
+        const updatePostResponse = yield axios.post(`graphql`,
+            updatePostQuery,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             }
         );
-        if (fetchPostResponse.status === 200) {
-            yield put(updatePostSuccess(fetchPostResponse.data))
+        if (updatePostResponse.status === 200) {
+            yield put(updatePostSuccess(updatePostResponse.data.data.updatePost))
         }
     }
     catch (err) {

@@ -111,7 +111,7 @@ module.exports = {
 
         const title = postInput.title;
         const content = postInput.content;
-        console.log('imageUrl',postInput.imageUrl)
+        console.log('imageUrl', postInput.imageUrl)
         const imageUrl = postInput.imageUrl.replace("//", "/");
 
         if (validator.isEmpty(title) || !validator.isLength(title, { min: 5 })) {
@@ -151,6 +151,66 @@ module.exports = {
 
     },
 
+    updatePost: async function ({ id, postInput }, req) {
+        if (!req.isAuth) {
+            const error = new Error('User Not Authenticated');
+            error.code = 401;
+            throw error;
+        }
+
+        const post = await Post.findById(id).populate('creator');
+        if (!post) {
+            const error = new Error('No Post Found');
+            error.code = 404;
+            throw error;
+        }
+
+        if (post.creator._id.toString() !== req.userId.toString()) {
+            const error = new Error('Unauthenticated User');
+            error.code = 403;
+            throw error;
+        }
+
+
+        let errors = [];
+
+        const title = postInput.title;
+        const content = postInput.content;
+        console.log('imageUrl', postInput.imageUrl)
+
+        if (validator.isEmpty(title) || !validator.isLength(title, { min: 5 })) {
+            errors.push({ message: 'title must have more than 5 characters' })
+        }
+
+        if (validator.isEmpty(title) || !validator.isLength(content, { min: 5 })) {
+            errors.push({ message: 'content must have more than 5 characters' })
+        }
+        if (errors.length) {
+            const error = new Error('Invalid input');
+            error.data = errors;
+            error.code = 422;
+            throw error;
+        }
+
+
+        post.title = postInput.title;
+        post.content = postInput.content;
+        if (postInput.imageUrl !== undefined) {
+            post.imageUrl = postInput.imageUrl.replace("//", "/");
+        }
+
+        const updatedPost = await post.save();
+
+        return {
+            ...updatedPost._doc,
+            _id: post._id.toString(),
+            createdAt: post.createdAt.toString(),
+            updatedAt: post.updatedAt.toString(),
+        }
+
+
+    },
+
     posts: async function ({ page }, req) {
 
         if (!req.isAuth) {
@@ -185,8 +245,7 @@ module.exports = {
         }
     },
 
-    post: async function({id},req)
-    {
+    post: async function ({ id }, req) {
         // if (!req.isAuth) {
         //     const error = new Error('User Not Authenticated');
         //     error.code = 401;
@@ -195,7 +254,7 @@ module.exports = {
 
         const post = await Post.findById(id).populate('creator');
 
-        if(!post) {
+        if (!post) {
             const error = new Error('No Post Found');
             error.code = 404;
             throw error;

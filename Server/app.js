@@ -71,6 +71,7 @@ app.put('/post-image', (req, res, next) => {
         return res.status(200).json({ message: 'No File Provided' });
     }
     if(req.body.oldPath){
+        console.log('oldPath',req.body.oldPath);
         clearImage(req.body.oldPath);
     }
     return res.status(201).json({message: 'file stored',filePath: req.file.path})
