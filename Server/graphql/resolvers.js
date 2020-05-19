@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const bcrypt = require('bcryptjs');
 const validator = require('validator').default;
 // const validator = validatorModule.default;
@@ -211,6 +213,37 @@ module.exports = {
 
     },
 
+    deletePost: async function ({ id }, req) {
+        if (!req.isAuth) {
+            const error = new Error('User Not Authenticated');
+            error.code = 401;
+            throw error;
+        }
+
+        const post = await Post.findById(id);
+
+        if (!post) {
+            const error = new Error('Sorry. This post no longer exists.')
+            error.statusCode = 422;
+            throw error;
+        }
+        if (post.creator.toString() !== req.userId.toString()) {
+            const error = new Error('Not Authorized.')
+            error.statusCode = 403;
+            throw error;
+        }
+
+        clearImage(post.imageUrl);
+        await Post.findByIdAndRemove(id)
+        const creatorOfDeletedPost = await User.findById(req.userId);
+        console.log('creatorOfDeletedPost',creatorOfDeletedPost.posts)
+        
+        creatorOfDeletedPost.posts.pull(id);
+        await creatorOfDeletedPost.save();
+        return true
+
+    },
+
     posts: async function ({ page }, req) {
 
         if (!req.isAuth) {
@@ -269,4 +302,11 @@ module.exports = {
 
     }
 
+}
+
+
+
+let clearImage = filePath => {
+    filePath = path.join(__dirname, '..', filePath);
+    fs.unlink(filePath, err => console.log(err))
 }

@@ -251,17 +251,29 @@ export function* updatePostByIdSaga(action) {
 }
 
 export function* deletePostByIdSaga(action) {
+    debugger
     console.log('deletePostByIdSaga initiated', action);
     try {
+
+        const deletePostQuery = {
+            query: `
+                mutation {
+                        deletePost(id: "${action.payload}")
+                }
+            `
+        }
+
         const token = localStorage.getItem('token');
-        const fetchPostResponse = yield axios.delete(`feed/posts/${action.payload}`,
+        const deletePostResponse = yield axios.post(`graphql`,
+            deletePostQuery,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             }
         );
-        if (fetchPostResponse.status === 200) {
+        debugger
+        if (deletePostResponse.status === 200) {
             yield put(deletePostByIdSuccess(action.payload))
         }
     }
