@@ -236,8 +236,8 @@ module.exports = {
         clearImage(post.imageUrl);
         await Post.findByIdAndRemove(id)
         const creatorOfDeletedPost = await User.findById(req.userId);
-        console.log('creatorOfDeletedPost',creatorOfDeletedPost.posts)
-        
+        console.log('creatorOfDeletedPost', creatorOfDeletedPost.posts)
+
         creatorOfDeletedPost.posts.pull(id);
         await creatorOfDeletedPost.save();
         return true
@@ -279,11 +279,11 @@ module.exports = {
     },
 
     post: async function ({ id }, req) {
-        // if (!req.isAuth) {
-        //     const error = new Error('User Not Authenticated');
-        //     error.code = 401;
-        //     throw error;
-        // }
+        if (!req.isAuth) {
+            const error = new Error('User Not Authenticated');
+            error.code = 401;
+            throw error;
+        }
 
         const post = await Post.findById(id).populate('creator');
 
@@ -300,7 +300,50 @@ module.exports = {
             updatedAt: post.updatedAt.toString(),
         }
 
+    },
+
+    user: async function (args, req) {
+        if (!req.isAuth) {
+            const error = new Error('User Not Authenticated');
+            error.code = 401;
+            throw error;
+        }
+
+        const user = await User.findById(req.userId);
+        if (!user) {
+            const error = new Error('No User Found!');
+            error.code = 404;
+            throw error;
+        }
+        return {
+            ...user._doc,
+            _id: user._id.toString()
+        }
+
+    },
+
+    updateStatus: async function({status},req) {
+        if (!req.isAuth) {
+            const error = new Error('User Not Authenticated');
+            error.code = 401;
+            throw error;
+        }
+        const user = await User.findById(rqe.userId);
+        if (!user) {
+            const error = new Error('No User Found!');
+            error.code = 404;
+            throw error;
+        }
+
+        user.status = status;
+        await user.save();
+        return {
+            ...user._doc,
+            _id: user._id.toString()
+        }
+
     }
+
 
 }
 

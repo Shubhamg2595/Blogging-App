@@ -66,13 +66,21 @@ function Feed(props) {
 
     const statusUpdateHandler = event => {
         event.preventDefault();
-        fetch('http://localhost:3000/feed/status', {
-            method: 'PATCH',
+        const graphqlQuery = {
+            query: `
+            mutation {
+                updateStatus(status: "${this.state.status}") {
+                    status
+                }
+            }`
+        }
+        fetch('http://localhost:3000/graphql', {
+            method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ status: status })
+            body: JSON.stringify(graphqlQuery)
         })
             .then(res => {
                 if (res.status !== 200 && res.status !== 201) {
@@ -81,6 +89,9 @@ function Feed(props) {
                 return res.json();
             })
             .then(resData => {
+                if(resData.errors){
+                    throw new Error('updating user status failed')
+                }
                 console.log(resData);
             })
             .catch(err => {

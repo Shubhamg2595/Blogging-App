@@ -7,16 +7,27 @@ export function* fetchUserStatusSaga(action) {
     try {
 
         const token = localStorage.getItem('token');
-        const loadStatusResponse = yield axios.get('feed/status',
+
+        const loadUserStatusQuery = {
+            query: `{
+                user {
+                    status
+                }
+            }`
+        }
+
+        const loadStatusResponse = yield axios.post('graphql',
+            loadUserStatusQuery,
             {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             }
         );
+
         if (loadStatusResponse.status === 200) {
             yield put(fetchStatusSuccess({
-                status: loadStatusResponse.data.status
+                status: loadStatusResponse.data.data.user.status
             }))
         }
     }
